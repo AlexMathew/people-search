@@ -1,4 +1,29 @@
 {% extends "template.html" %}
 {% block content %}
-	
+	<div class="well well-sm">
+		<div class="page-header">
+  			<h3>Welcome to GooglePeopleSearch ! 
+  				<br>
+  				<small>(It's actually just Google Search. I wrote a scraper to extract data from the carousel and sidebar and display it as the result itself. Thank you for your perfection, Google !)</small>
+  			</h3>
+		</div>
+		<h5>You can search for</h5>
+		<ul class="list-group">
+			<li class="list-group-item">Specific people. Examples: Sachin Tendulkar (or) Lionel Messi</li>
+			<li class="list-group-item">The title of a person. Example, Coach of the Los Angeles Clippers (or) CEO of Google</li>
+		</ul>
+	</div>
+	<div class="page-header">
+  		<h2>Search <small>(remember the rules)</small></h2>
+	</div>
+	<div class="col-lg-6">
+	    <div class="input-group">
+	      	<form action="{{ url_for('search') }}" method=post>
+		    	<input type="text" class="form-control" name="query">
+		      	<span class="input-group-btn">
+		        	<button class="btn btn-default glow" type="submit">Go!</button>
+		      	</span>
+		  	</form>
+	    </div>
+	</div>
 {% endblock %}

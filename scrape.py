@@ -1,3 +1,4 @@
+import time
 from itertools import izip
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys 
@@ -21,14 +22,18 @@ def get_box_text_info(browser):
 	return box_text_info
 
 
-def get_box_details(browser):
+def get_details(browser):
 	try:
-		name = browser.find_element_by_xpath('//div[@class="_eF"]')
-		title = browser.find_element_by_xpath('//div[@class="_Tfc"]')
+		name = browser.find_element_by_xpath('//div[@class="_eF"]').text
+		title = browser.find_element_by_xpath('//div[@class="_Tfc"]').text
 		more_info = browser.find_element_by_xpath('//div[@class="vk_arc"]')
 		more_info.click()
 	except NoSuchElementException:
-		name, title = None, None
+		try:
+			name = browser.find_element_by_xpath('//div[@class="kno-ecr-pt"]').text
+			title = browser.find_element_by_xpath('//div[@class="_CLb"]').text
+		except NoSuchElementException:
+			name, title = None, None
 	return {'name': name, 'title': title}
 
 
@@ -46,7 +51,7 @@ def get_points(browser):
 		headers = browser.find_elements_by_xpath('//span[@class="_xdb"]')
 		values = browser.find_elements_by_xpath('//span[@class="kno-fv _lgc"]')
 		for h, v in izip(headers, values):
-			points[h] = v
+			points[h.text] = v.text
 	except NoSuchElementException:
 		pass
 	return points
@@ -56,7 +61,7 @@ def get_other_searches(browser):
 	try:
 		browser.find_elements_by_xpath('//a[@class="_Yqb"]')[-1].click()
 		other_searches = [x.text for x in browser.find_elements_by_xpath('//div[@class="kltat"]')]
-	except NoSuchElementException:
+	except (NoSuchElementException, IndexError):
 		other_searches = None
 	return other_searches
 
@@ -69,9 +74,10 @@ def scrape_page(query):
 	inp = browser.find_element_by_xpath('//input[@id="gbqfq"]')
 	inp.send_keys(query)
 	inp.send_keys(Keys.ENTER)
+	time.sleep(5)
 	spell_fix = check_spelling(browser)
 	box_text_info = get_box_text_info(browser)
-	box_details = get_box_details(browser)
+	details = get_details(browser)
 	description = get_description(browser)
 	points = get_points(browser)
 	other_searches = get_other_searches(browser)
@@ -80,7 +86,7 @@ def scrape_page(query):
 	data = {
 		'spell': spell_fix,
 		'box_text': box_text_info,
-		'box_details': box_details,
+		'details': details,
 		'description': description,
 		'points': points,
 		'other_searches': other_searches
