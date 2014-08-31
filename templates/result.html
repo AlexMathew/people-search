@@ -1,4 +1,34 @@
 {% extends "template.html" %}
 {% block content %}
-	{{ data }}
+	{% if data.details.name %}
+		<div class="page-header">
+  			<h2>{{ data.details.name }} 
+  			{% if data.details.title %}	
+  				<small>{{ data.details.title }}</small>
+  			{% endif %}
+  			</h2>
+		</div>
+	{% endif %}
+	{% if data.spell %}
+		<h4>What you really meant was "{{ data.spell }}"</h4>
+	{% endif %}
+	{% if data.box_text %}
+		<h3>About</h3>
+		<br>
+		<p>{{ data.box_text }}</p>
+	{% endif %}
+	{% if data.description %}
+		<p>{{ data.description }}</p>
+	{% endif %}
+	{% if data.points %}
+		{% for header in data.points %}
+			<p>{{ header }} {{ data.points[header] }}</p>
+		{% endfor %} 
+	{% endif %}
+	{% if data.other_searches %}
+		<h3>People also search for : </h3>
+		{% for search in data.other_searches %}
+			| {{ search }} |
+		{% endfor %}
+	{% endif %}
 {% endblock %}
