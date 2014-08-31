@@ -59,7 +59,9 @@ def get_points(browser):
 
 def get_other_searches(browser):
 	try:
+		time.sleep(1)
 		browser.find_elements_by_xpath('//a[@class="_Yqb"]')[-1].click()
+		time.sleep(2)
 		other_searches = [x.text for x in browser.find_elements_by_xpath('//div[@class="kltat"]')]
 	except (NoSuchElementException, IndexError):
 		other_searches = None
